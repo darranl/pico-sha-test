@@ -201,61 +201,6 @@ int main()
         printf("\n");
         printf("Expected=%s", fips_expected_hashes[test]);
     }
-
-    return 0;
-
-
-    char data[] = "abcdefghijklmnopqrstuvwxyz";
-    char expected[] = "32d10c7b8cf96570ca04ce37f2a19d84240d3a89";
-
-    
-    sha1_digest(data,26, digest);
-    char digest_hex[9];
-    digest_hex[8] = 0;
-    printf("\nDigest  =");
-    for (short i = 0; i < 5; i++) {
-        uint32_to_hex_string(digest[i], digest_hex);
-        printf("%s", digest_hex);
-    }
-    printf("\n");
-    printf("Expected=%s", expected);
-
-    return 0;
-
-    short test_lengths[] = { 1, 2, 3, 4, 5, 26, 55, 56, 57, 58, 59, 631, 632, 633, 634, 635 };
-    for (short i = 0; i < 16; i++) {
-        char test_data[test_lengths[i]];
-        for (short j = 0; j < test_lengths[i]; j++) {
-            test_data[j] = 'a';
-        }
-        sha1_digest(test_data, test_lengths[i], digest);
-        printf("\nDigest[%hd] = ", test_lengths[i]);
-        for (short i = 0; i < 5; i++) {
-            uint32_to_hex_string(digest[i], digest_hex);
-            printf("%s", digest_hex);
-        }
-        printf("\n");
-        uint32_t expected = test_lengths[i] * 8;
-        uint32_to_hex_string(expected, digest_hex);
-        printf("Expected_Length[%hd] = 0x%s\n", test_lengths[i], digest_hex);
-    }
-
-    return 0;
-
-    char result[9];
-    
-    result[8] = 0;
-    uint32_t value = 0;
-    while (true) {
-        //uint32_to_hex(value, result);
-        uint32_to_hex_string(value, result);
-        uint32_t and_back = hex_string_to_uint32(result);
-        printf("-Result %u=0x%s - %u\n",value, result, and_back);
-        value++;
-        sleep_ms(250);
-    }
-
-    return 0;
 }
 
 #ifdef LOG_ARRAY
