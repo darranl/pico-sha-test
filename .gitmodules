@@ -1,0 +1,9 @@
+[submodule "security"]
+	path = security
+	url = git@github.com:darranl/pico-security.git
+[submodule "util"]
+	path = util
+	url = git@github.com:darranl/pico-util.git
+[submodule ".vscode"]
+	path = .vscode
+	url = git@github.com:darranl/pico-vscode.git
