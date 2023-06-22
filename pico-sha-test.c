@@ -24,8 +24,6 @@
 
 #include "pico-sha-data.h"
 
-//#define LOG_ARRAY
-
 int main()
 {
     stdio_init_all();
