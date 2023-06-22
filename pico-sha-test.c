@@ -14,8 +14,11 @@
  * If  not, see <https://www.gnu.org/licenses/>. 
  */
 
+#include <ctype.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "pico/stdlib.h"
 
 #include "util/binaryutil.h"
@@ -28,9 +31,13 @@ int main()
 {
     stdio_init_all();
 
-    printf("\n\n\nBegin SHA-1 Testing\n");
+    printf("\n\n\nBegin SHA-1 Testing\n\n");
 
+    printf("+-------+--------+-------------+\n");
+    printf("| Test  | Length | Pass / Fail |\n");
+    printf("+-------+--------+-------------+\n");
     uint32_t digest[5]; // Placeholder for 160 bit digest.
+    uint32_t expected_digest[5];
     
     for (short test = 0; test < 67 ; test++ ) {
         struct data_element current_element = sha_tests[test];
@@ -43,17 +50,27 @@ int main()
 
         sha1_digest(raw_test_bytes, bytes, digest);
 
-        char digest_hex[9];
-        digest_hex[8] = 0;
-        printf("\n\nTest %d", test);
-        printf("\nDigest  =");
-        for (short i = 0; i < 5; i++) {
-            uint32_to_hex_string(digest[i], digest_hex);
-            printf("%s", digest_hex);
+        char *expected_digest_hex = current_element.expected_hash;
+        for (short pos = 0 ; pos < 5 ; pos ++) {
+            char current_int[9];
+            strncpy(current_int, &expected_digest_hex[pos * 8], 8);
+            current_int[8] = 0;
+            for (short charPos = 0; charPos < 8 ; charPos++) {
+                current_int[charPos] = toupper(current_int[charPos]);
+            }
+
+            expected_digest[pos] = hex_string_to_uint32(current_int);
         }
-        printf("\n");
-        printf("Expected=%s", current_element.expected_hash);
+
+        bool passed = true;
+        for (int testIntPos = 0 ; testIntPos < 5 && passed ; testIntPos++) {
+            passed = digest[testIntPos] == expected_digest[testIntPos];
+        }
+
+        printf("| %*d | %*d | %*s |\n", 5, test, 6, current_element.length, 11, passed ? "Pass" : "Fail");
     }
+
+    printf("+-------+--------+-------------+\n");
 }
 
 #ifdef LOG_ARRAY
