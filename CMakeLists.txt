@@ -24,7 +24,8 @@ pico_sdk_init()
 # Add executable. Default name is the project name, version 0.1
 
 add_executable(pico-sha-test pico-sha-test.c 
-               util/binaryutil.S util/hexutil.S security/sha.S)
+               util/binaryutil.S util/hexutil.S util/systick.S
+               security/sha.S)
 
 pico_set_program_name(pico-sha-test "pico-sha-test")
 pico_set_program_version(pico-sha-test "0.1")

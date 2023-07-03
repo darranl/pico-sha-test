@@ -23,6 +23,7 @@
 
 #include "util/binaryutil.h"
 #include "util/hexutil.h"
+#include "util/systick.h"
 #include "security/sha.h"
 
 #include "pico-sha-data.h"
@@ -33,9 +34,9 @@ int main()
 
     printf("\n\n\nBegin SHA-1 Testing\n\n");
 
-    printf("+-------+--------+-------------+\n");
-    printf("| Test  | Length | Pass / Fail |\n");
-    printf("+-------+--------+-------------+\n");
+    printf("+-------+--------+-------------+-----------------+\n");
+    printf("| Test  | Length | Pass / Fail | Syst Tick Count |\n");
+    printf("+-------+--------+-------------+-----------------+\n");
     uint32_t digest[5]; // Placeholder for 160 bit digest.
     uint32_t expected_digest[5];
     
@@ -48,7 +49,9 @@ int main()
             raw_test_bytes[byte] = hex_to_char(&current_data[byte * 2]);
         }
 
+        start_syst_counter();
         sha1_digest(raw_test_bytes, bytes, digest);
+        uint32_t ticks = stop_syst_counter();
 
         char *expected_digest_hex = current_element.expected_hash;
         for (short pos = 0 ; pos < 5 ; pos ++) {
@@ -67,10 +70,10 @@ int main()
             passed = digest[testIntPos] == expected_digest[testIntPos];
         }
 
-        printf("| %*d | %*d | %*s |\n", 5, test, 6, current_element.length, 11, passed ? "Pass" : "Fail");
+        printf("| %*d | %*d | %*s | %*d |\n", 5, test, 6, current_element.length, 11, passed ? "Pass" : "Fail", 15, ticks);
     }
 
-    printf("+-------+--------+-------------+\n");
+    printf("+-------+--------+-------------+-----------------+\n");
 }
 
 #ifdef LOG_ARRAY
